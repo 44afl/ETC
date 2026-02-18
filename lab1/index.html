@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Exploring Cloud Technologies</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f7fafd 100%);
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            color: #222;
+        }
+        .container {
+            max-width: 700px;
+            margin: 48px auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 40px 32px 32px 32px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2d6cdf;
+            letter-spacing: -1px;
+        }
+        .desc {
+            font-size: 1.15rem;
+            color: #444;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2d6cdf;
+            letter-spacing: 0.5px;
+        }
+        ul.dates {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul.dates li {
+            background: #f0f4fa;
+            margin-bottom: 10px;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        ul.dates li span {
+            font-weight: 700;
+            color: #2d6cdf;
+            margin-right: 12px;
+            min-width: 110px;
+            display: inline-block;
+        }
+        .button-group {
+            margin: 32px 0 24px 0;
+            display: flex;
+            gap: 16px;
+        }
+        .tab-btn {
+            background: #2d6cdf;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: #1746a2;
+        }
+        .tab-content {
+            display: none;
+            margin-top: 18px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table.grades {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table.grades th, table.grades td {
+            border: 1px solid #e0e7ff;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        table.grades th {
+            background: #f0f4fa;
+            color: #2d6cdf;
+            font-weight: 700;
+        }
+        table.grades td.category {
+            font-weight: 700;
+            color: #1746a2;
+            background: #f7fafd;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 8px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exploring Cloud Technologies</h1>
+        <div class="desc">
+            Dive into the world of cloud computing! This course covers fundamental concepts, hands-on labs, and real-world applications of cloud platforms. Learn about IaaS, PaaS, SaaS, deployment models, security, and best practices to prepare for a career in modern IT.
+        </div>
+        <div>
+            <div class="section-title">Schedule & Important Dates</div>
+            <ul class="dates">
+                <li><span>Course Start:</span>February 18, 2026</li>
+                <li><span>First Assignment:</span> February 25, 2026</li>
+                <li><span>Project Due:</span> April 15, 2026</li>
+                <li><span>Final Exam:</span> May 10, 2026</li>
+            </ul>
+        </div>
+        <div class="button-group">
+            <button class="tab-btn active" onclick="showTab('courses')">Courses</button>
+            <button class="tab-btn" onclick="showTab('labs')">Laboratory Assignments</button>
+            <button class="tab-btn" onclick="showTab('grades')">Student Grades</button>
+        </div>
+        <div id="courses" class="tab-content active">
+            <div class="section-title">Course Topics</div>
+            <ul>
+                <li>Introduction to Cloud Computing</li>
+                <li>Cloud Service Models: IaaS, PaaS, SaaS</li>
+                <li>Deployment Models: Public, Private, Hybrid</li>
+                <li>Cloud Security & Compliance</li>
+                <li>Cloud Storage & Databases</li>
+                <li>Serverless Computing</li>
+                <li>DevOps in the Cloud</li>
+                <li>Cost Management & Optimization</li>
+            </ul>
+        </div>
+        <div id="labs" class="tab-content">
+            <div class="section-title">Laboratory Assignments</div>
+            <ol>
+                <li>Setting Up a Virtual Machine in the Cloud</li>
+                <li>Deploying a Web Application using PaaS</li>
+                <li>Configuring Cloud Storage Buckets</li>
+                <li>Implementing IAM Roles & Policies</li>
+                <li>Monitoring and Logging Cloud Resources</li>
+                <li>Serverless Function Deployment</li>
+            </ol>
+        </div>
+        <div id="grades" class="tab-content">
+            <div class="section-title">Student Grades</div>
+            <table class="grades">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Max Points</th>
+                        <th>Your Score</th>
+                        <th>Weight (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="category">Assignments</td>
+                        <td>40</td>
+                        <td>36</td>
+                        <td>30%</td>
+                    </tr>
+                    <tr>
+                        <td class="category">Laboratory</td>
+                        <td>30</td>
+                        <td>28</td>
+                        <td>25%</td>
+                    </tr>
+                    <tr>
+                        <td class="category">Project</td>
+                        <td>20</td>
+                        <td>18</td>
+                        <td>20%</td>
+                    </tr>
+                    <tr>
+                        <td class="category">Final Exam</td>
+                        <td>30</td>
+                        <td>27</td>
+                        <td>25%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            const btns = document.querySelectorAll('.tab-btn');
+            if (tabId === 'courses') btns[0].classList.add('active');
+            if (tabId === 'labs') btns[1].classList.add('active');
+            if (tabId === 'grades') btns[2].classList.add('active');
+        }
+    </script>
+</body>
+</html>
