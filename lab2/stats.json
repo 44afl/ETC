@@ -1,33 +1,30 @@
 {
-  "total_requests": 14,
+  "total_requests": 8,
   "per_endpoint": {
     "https://jsonplaceholder.typicode.com/users": 1,
     "https://jsonplaceholder.typicode.com/posts": 2,
-    "https://jsonplaceholder.typicode.com/posts/1": 11
+    "https://jsonplaceholder.typicode.com/posts/1": 2,
+    "https://jsonplaceholder.typicode.com/posts/5": 1,
+    "https://jsonplaceholder.typicode.com/posts/10": 1,
+    "https://jsonplaceholder.typicode.com/posts/2": 1
   },
   "per_method": {
     "GET": 2,
     "POST": 1,
-    "PATCH": 8,
-    "DELETE": 3
+    "DELETE": 3,
+    "PATCH": 2
   },
   "status_codes": {
-    "2": 5
+    "2": 8
   },
   "response_times": [
-    0.44857192039489746,
-    0.8518908023834229,
-    0.5661542415618896,
-    0.5504424571990967,
-    0.8087940216064453,
-    0.6005945205688477,
-    0.5915312767028809,
-    0.5731334686279297,
-    0.5424783229827881,
-    0.5615777969360352,
-    0.5544373989105225,
-    0.5683467388153076,
-    0.5479152202606201,
-    0.5489692687988281
+    0.5291714668273926,
+    0.810516357421875,
+    0.5785949230194092,
+    0.585200309753418,
+    0.543297529220581,
+    0.5577168464660645,
+    0.5598981380462646,
+    0.8003227710723877
   ]
 }

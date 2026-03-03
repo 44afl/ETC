@@ -149,7 +149,7 @@ def show_statistics():
     
     stats_text = f"""=== STATISTICS ===
     Total requests: {stats['total_requests']}
-    Requests per endpoint: {len(stats['per_endpoint'])}
+    Per endpoint: {', '.join(f"{k.replace('https://jsonplaceholder.typicode.com', '')} ({v})" for k, v in stats['per_endpoint'].items())}
     2xx: {stats['status_codes'].get('2', 0)}
     4xx: {stats['status_codes'].get('4', 0)}
     5xx: {stats['status_codes'].get('5', 0)}
