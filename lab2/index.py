@@ -2,9 +2,13 @@ import requests
 import time
 import matplotlib.pyplot as plt
 import urllib
+import argparse
+import json
+import os
 from collections import defaultdict
 
 BASE_URL = "https://jsonplaceholder.typicode.com"
+STATS_FILE = "stats.json"
 
 stats = {
     "total_requests": 0,
@@ -14,16 +18,38 @@ stats = {
     "response_times": []
 }
 
+def load_stats():
+    global stats
+    if os.path.exists(STATS_FILE):
+        with open(STATS_FILE, "r") as f:
+            data = json.load(f)
+            stats["total_requests"] = data.get("total_requests", 0)
+            stats["per_endpoint"] = defaultdict(int, data.get("per_endpoint", {}))
+            stats["per_method"] = defaultdict(int, data.get("per_method", {}))
+            stats["status_codes"] = defaultdict(int, data.get("status_codes", {}))
+            stats["response_times"] = data.get("response_times", [])
+
+def save_stats():
+    with open(STATS_FILE, "w") as f:
+        json.dump({
+            "total_requests": stats["total_requests"],
+            "per_endpoint": dict(stats["per_endpoint"]),
+            "per_method": dict(stats["per_method"]),
+            "status_codes": dict(stats["status_codes"]),
+            "response_times": stats["response_times"]
+        }, f, indent=2)
+
 def tracked_request(method, url, **kwargs):
     start = time.time()
     response = requests.request(method, url, **kwargs)
     elapsed = time.time() - start
 
     stats["total_requests"] += 1
-    stats["per_endpoint"][url] += 1
+    stats["per_endpoint"][url.split("?")[0]] += 1
     stats["per_method"][method] += 1
-    stats["status_codes"][response.status_code // 100] += 1
+    stats["status_codes"][str(response.status_code // 100)] += 1
     stats["response_times"].append(elapsed)
+    save_stats()
 
     return response
 
@@ -40,13 +66,12 @@ def users_by_city(city):
         print(f'{user["name"]} - {user["email"]}')
 
 def create_post():
-    posts = tracked_request("GET", f"{BASE_URL}/posts").json()
-    existing_titles = {p["title"] for p in posts}
-
     user_id = int(input("User ID: "))
     while True:
         title = input("Title: ")
-        if title not in existing_titles:
+        response = tracked_request("GET", f"{BASE_URL}/posts?title={urllib.parse.quote(title)}")
+        existing_posts = response.json()
+        if not existing_posts:
             break
         print("Title already exists. Choose another.")
 
@@ -61,7 +86,12 @@ def create_post():
     print("Created post:", response.json())
 
 def update_post():
-    post_id = int(input("Post ID to update: "))
+    try:
+        post_id = int(input("Post ID to update: "))
+    except ValueError:
+        print("Invalid input. Please enter a numeric Post ID.")
+        return update_post()
+
     choice = input("Update (title/body/both): ").lower()
 
     data = {}
@@ -69,6 +99,10 @@ def update_post():
         data["title"] = input("New title: ")
     if choice in ("body", "both"):
         data["body"] = input("New body: ")
+
+    if not data:
+        print("Invalid choice. Please enter 'title', 'body' or 'both'.")
+        return update_post()
 
     headers = {"Authorization": "fake-token-12345"}
 
@@ -83,10 +117,13 @@ def update_post():
 
 def delete_post():
     while True:
-        post_id = int(input("Post ID to delete (type 0 to skip): "))
-        if post_id == 0:
-            print("Skipping delete operation.")
+        try:
+            post_id = int(input("Post ID to delete: "))
+        except ValueError:
+            print("Invalid input. Please enter a numeric Post ID.")
+            delete_post()
             break
+
         response = tracked_request(
             "DELETE",
             f"{BASE_URL}/posts/{post_id}"
@@ -101,30 +138,71 @@ def delete_post():
 def show_statistics():
     times = stats["response_times"]
 
-    print("\n=== STATISTICS ===")
-    print("Total requests:", stats["total_requests"])
-    print("Requests per endpoint:", dict(stats["per_endpoint"]))
-    print("Requests per method:", dict(stats["per_method"]))
-    print("2xx:", stats["status_codes"].get(2, 0))
-    print("4xx:", stats["status_codes"].get(4, 0))
-    print("5xx:", stats["status_codes"].get(5, 0))
-    print("Avg response time:", sum(times) / len(times))
-    print("Fastest:", min(times))
-    print("Slowest:", max(times))
+    if not times:
+        print("No statistics available yet. Make at least one request first.")
+        return
 
-    plt.figure()
-    plt.bar(stats["per_method"].keys(), stats["per_method"].values())
-    plt.title("Requests per HTTP Method")
-    plt.show()
-
-    plt.figure()
-    plt.hist(times, bins=10)
-    plt.title("Response Time Distribution")
+    fig = plt.figure(figsize=(10, 6))
+    
+    ax_text = plt.subplot(2, 1, 1)
+    ax_text.axis('off')
+    
+    stats_text = f"""=== STATISTICS ===
+    Total requests: {stats['total_requests']}
+    Requests per endpoint: {len(stats['per_endpoint'])}
+    2xx: {stats['status_codes'].get('2', 0)}
+    4xx: {stats['status_codes'].get('4', 0)}
+    5xx: {stats['status_codes'].get('5', 0)}
+    Avg response time: {sum(times) / len(times):.3f}s, out of {len(times)} requests
+    Fastest: {min(times):.3f}s
+    Slowest: {max(times):.3f}s"""
+    
+    ax_text.text(0.05, 0.95, stats_text, transform=ax_text.transAxes,
+                 fontfamily='monospace', fontsize=9, verticalalignment='top',
+                 bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+    
+    ax_chart = plt.subplot(2, 1, 2)
+    bars = ax_chart.bar(stats["per_method"].keys(), stats["per_method"].values())
+    ax_chart.set_title("Requests per HTTP Method")
+    ax_chart.set_xlabel("HTTP Method")
+    ax_chart.set_ylabel("Number of requests")
+    ax_chart.grid(axis="y", alpha=0.3)
+    
+    for bar in bars:
+        height = bar.get_height()
+        ax_chart.text(bar.get_x() + bar.get_width()/2., height,
+                     f'{int(height)}',
+                     ha='center', va='bottom', fontweight='bold')
+    
+    plt.tight_layout()
     plt.show()
 
 if __name__ == "__main__":
-    users_by_city(str(input("Enter city name to filter users: ")))
-    create_post()
-    update_post()
-    delete_post()
-    show_statistics()
+    load_stats()
+    
+    parser = argparse.ArgumentParser(description="API interaction tool for JSONPlaceholder")
+    parser.add_argument("--city", type=str, help="City name to filter users")
+    parser.add_argument("--create-post", action="store_true", help="Create a new post")
+    parser.add_argument("--update-post", action="store_true", help="Update an existing post")
+    parser.add_argument("--delete-post", action="store_true", help="Delete a post")
+    parser.add_argument("--stats", action="store_true", help="Show statistics")
+    
+    args = parser.parse_args()
+    
+    if not any(vars(args).values()):
+        parser.print_help()
+    else:
+        if args.city:
+            users_by_city(args.city)
+        
+        if args.create_post:
+            create_post()
+        
+        if args.update_post:
+            update_post()
+        
+        if args.delete_post:
+            delete_post()
+        
+        if args.stats:
+            show_statistics()
