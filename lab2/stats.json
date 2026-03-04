@@ -1,21 +1,21 @@
 {
-  "total_requests": 8,
+  "total_requests": 11,
   "per_endpoint": {
-    "https://jsonplaceholder.typicode.com/users": 1,
-    "https://jsonplaceholder.typicode.com/posts": 2,
+    "https://jsonplaceholder.typicode.com/users": 2,
+    "https://jsonplaceholder.typicode.com/posts": 4,
     "https://jsonplaceholder.typicode.com/posts/1": 2,
     "https://jsonplaceholder.typicode.com/posts/5": 1,
     "https://jsonplaceholder.typicode.com/posts/10": 1,
     "https://jsonplaceholder.typicode.com/posts/2": 1
   },
   "per_method": {
-    "GET": 2,
-    "POST": 1,
+    "GET": 4,
+    "POST": 2,
     "DELETE": 3,
     "PATCH": 2
   },
   "status_codes": {
-    "2": 8
+    "2": 11
   },
   "response_times": [
     0.5291714668273926,
@@ -25,6 +25,9 @@
     0.543297529220581,
     0.5577168464660645,
     0.5598981380462646,
-    0.8003227710723877
+    0.8003227710723877,
+    0.93707275390625,
+    1.468768835067749,
+    0.7101750373840332
   ]
 }

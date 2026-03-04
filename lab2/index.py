@@ -53,6 +53,7 @@ def tracked_request(method, url, **kwargs):
 
     return response
 
+#Ex1
 def users_by_city(city):
     response = tracked_request("GET", f"{BASE_URL}/users?address.city={urllib.parse.quote(city)}")
     users = response.json()
@@ -65,8 +66,14 @@ def users_by_city(city):
     for user in users:
         print(f'{user["name"]} - {user["email"]}')
 
+#Ex2
 def create_post():
-    user_id = int(input("User ID: "))
+    try:
+        user_id = int(input("User ID: "))
+    except ValueError:
+        print("Invalid input. Please enter a numeric User ID.")
+        return create_post()
+    
     while True:
         title = input("Title: ")
         response = tracked_request("GET", f"{BASE_URL}/posts?title={urllib.parse.quote(title)}")
@@ -85,6 +92,7 @@ def create_post():
 
     print("Created post:", response.json())
 
+#Ex3
 def update_post():
     try:
         post_id = int(input("Post ID to update: "))
@@ -115,6 +123,7 @@ def update_post():
 
     print("Updated post:", response.json())
 
+#Ex4
 def delete_post():
     while True:
         try:
@@ -135,6 +144,7 @@ def delete_post():
         else:
             print("Delete failed. Try again.")
 
+#Ex5
 def show_statistics():
     times = stats["response_times"]
 
